@@ -62,3 +62,17 @@ def connect_aws(
 
     except (ClientError, NoCredentialsError):
         raise InvalidAWSCredentialsException()
+
+def get_aws_status(
+    db: Session,
+    current_user: User,
+):
+    account = (
+        db.query(AWSAccount)
+        .filter(AWSAccount.owner_id == current_user.id)
+        .first()
+    )
+
+    return {
+        "connected": account is not None
+    }

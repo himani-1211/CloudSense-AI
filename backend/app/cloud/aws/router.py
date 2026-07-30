@@ -12,6 +12,7 @@ from app.cloud.aws.schemas import (
     LambdaResponse,
     RDSResponse,
     EBSResponse,
+    AWSStatusResponse,
 )
 from app.cloud.aws.service import connect_aws
 from app.cloud.aws.resource_service import (
@@ -23,6 +24,9 @@ from app.cloud.aws.resource_service import (
     list_rds_instances,
     list_ebs_volumes,
 )
+
+from app.cloud.aws.service import get_aws_status
+
 from app.core.database import get_db
 from app.models.user import User
 
@@ -135,6 +139,19 @@ def get_ebs_volumes(
     current_user: User = Depends(get_current_user),
 ):
     return list_ebs_volumes(
+        db=db,
+        current_user=current_user,
+    )
+
+@router.get(
+    "/status",
+    response_model=AWSStatusResponse,
+)
+def aws_status(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return get_aws_status(
         db=db,
         current_user=current_user,
     )

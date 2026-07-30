@@ -52,3 +52,6 @@ class EBSResponse(BaseModel):
     size: int
     state: str
     volume_type: str
+
+class AWSStatusResponse(BaseModel):
+    connected: bool

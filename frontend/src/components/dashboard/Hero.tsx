@@ -1,102 +1,124 @@
 import {
-  Activity,
   CheckCircle2,
-  RefreshCw,
+  BrainCircuit,
+  AlertTriangle,
+  Cloud,
+  Sparkles,
 } from "lucide-react";
 
-export default function Hero() {
+import type { DashboardCards } from "../../api/dashboard";
+
+interface HeroProps {
+  cards: DashboardCards;
+}
+
+export default function Hero({ cards }: HeroProps) {
   return (
-    <section className="mb-8 flex items-start justify-between">
-
-      {/* Left */}
-
-      <div>
+    <section className="mb-10">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-300">
+          <Sparkles size={16} />
+          AI-Powered Multi-Cloud Operations Intelligence
+        </div>
 
         <h1
-         className="text-5xl font-semibold tracking-tight text-white"
-         style={{ fontFamily: "var(--font-heading)" }}
-         >
-            Cloud Intelligence Dashboard
-            </h1>
+          className="text-5xl font-bold tracking-tight text-white"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          Welcome back,
+          <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 bg-clip-text text-transparent">
+            {" "}Himani 👋
+          </span>
+        </h1>
 
-        <p className="mt-3 max-w-2xl text-base leading-7 text-slate-400">
-          Monitor, optimize and secure your cloud infrastructure
-          with AI-powered insights and real-time recommendations.
+        <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-400">
+          Everything happening across your connected cloud ecosystem,
+          intelligently analyzed and prioritized by AI.
         </p>
-
       </div>
 
-      {/* Right */}
-
-      <div className="flex gap-4">
-
-        <InfoCard
-          icon={<RefreshCw size={18} />}
-          title="Last Synced"
-          value="2 minutes ago"
+      {/* Status Cards */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <StatusCard
+          icon={<Cloud size={20} />}
+          title="Connected Clouds"
+          value={cards.connected_clouds.toString()}
+          subtitle={
+            cards.connected_clouds > 0
+              ? "AWS Connected"
+              : "No Cloud Connected"
+          }
+          color="blue"
         />
 
-        <InfoCard
-          icon={<Activity size={18} />}
-          title="AWS Region"
-          value="us-east-1"
+        <StatusCard
+          icon={<CheckCircle2 size={20} />}
+          title="Platform Health"
+          value={`${cards.platform_health}%`}
+          subtitle="Infrastructure Health"
+          color="green"
         />
 
-        <InfoCard
-          icon={<CheckCircle2 size={18} />}
-          title="Health"
-          value="Excellent"
-          green
+        <StatusCard
+          icon={<AlertTriangle size={20} />}
+          title="Active Incidents"
+          value={cards.active_incidents.toString()}
+          subtitle={
+            cards.active_incidents > 0
+              ? "Requires Attention"
+              : "No Active Incidents"
+          }
+          color="orange"
         />
 
+        <StatusCard
+          icon={<BrainCircuit size={20} />}
+          title="AI Confidence"
+          value={`${cards.ai_confidence}%`}
+          subtitle="Live Analysis"
+          color="purple"
+        />
       </div>
-
     </section>
   );
 }
 
-interface InfoCardProps {
+interface StatusCardProps {
   icon: React.ReactNode;
   title: string;
   value: string;
-  green?: boolean;
+  subtitle: string;
+  color: "blue" | "green" | "orange" | "purple";
 }
 
-function InfoCard({
+function StatusCard({
   icon,
   title,
   value,
-  green = false,
-}: InfoCardProps) {
-  return (
-    <div className="flex min-w-[170px] items-center gap-4 rounded-2xl border border-white/10 bg-[#151C31] px-5 py-4">
+  subtitle,
+  color,
+}: StatusCardProps) {
+  const colors = {
+    blue: "bg-cyan-500/10 text-cyan-400",
+    green: "bg-emerald-500/10 text-emerald-400",
+    orange: "bg-orange-500/10 text-orange-400",
+    purple: "bg-violet-500/10 text-violet-400",
+  };
 
-      <div
-        className={`rounded-xl p-3 ${
-          green
-            ? "bg-emerald-500/15 text-emerald-400"
-            : "bg-indigo-500/15 text-indigo-400"
-        }`}
-      >
+  return (
+    <div className="rounded-2xl border border-white/10 bg-[#151C31] p-6 transition-all duration-200 hover:border-cyan-500/20 hover:-translate-y-1">
+      <div className={`mb-5 inline-flex rounded-xl p-3 ${colors[color]}`}>
         {icon}
       </div>
 
-      <div>
+      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+        {title}
+      </p>
 
-        <p className="text-xs uppercase tracking-wider text-slate-500">
-          {title}
-        </p>
+      <h3 className="mt-2 text-3xl font-bold text-white">{value}</h3>
 
-        <p
-          className={`mt-1 font-semibold ${
-            green ? "text-emerald-400" : "text-white"
-          }`}
-        >
-          {value}
-        </p>
-
-      </div>
-
+      <p className="mt-2 text-sm text-slate-400">{subtitle}</p>
     </div>
   );
 }

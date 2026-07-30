@@ -39,6 +39,10 @@ body {
    Typography
 ================================ */
 
+/* ===============================
+   Typography
+================================ */
+
 h1,
 h2,
 h3,
@@ -49,19 +53,34 @@ p {
   margin: 0;
 }
 
+/* Major headings */
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+}
+
 h1 {
   font-size: var(--font-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 h2 {
   font-size: var(--font-2xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 h3 {
   font-size: var(--font-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 600;
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--font-body);
 }
 
 p {
