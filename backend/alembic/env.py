@@ -10,6 +10,7 @@ from app.core.database import Base
 # Import all models here
 from app.models.user import User
 from app.cloud.aws.models import AWSAccount
+from app.ai_copilot.models import CopilotMessage
 
 config = context.config
 

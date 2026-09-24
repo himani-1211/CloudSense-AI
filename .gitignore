@@ -81,3 +81,10 @@ postgres_data/
 # ==========================
 
 **/__pycache__/
+
+# ==========================
+# AI Copilot - generated RAG index (rebuild via build_index.py)
+# ==========================
+
+backend/app/ai_copilot/rag/index/*.npy
+backend/app/ai_copilot/rag/index/*.json

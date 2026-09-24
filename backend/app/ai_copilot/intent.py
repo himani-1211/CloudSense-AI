@@ -2,6 +2,20 @@ from enum import Enum
 
 
 class Intent(str, Enum):
+
+    # ---------------- Conversation ----------------
+
+    GREETING = "greeting"
+    HELP = "help"
+    THANKS = "thanks"
+    GOODBYE = "goodbye"
+
+    # ---------------- Knowledge ----------------
+
+    KNOWLEDGE = "knowledge"
+
+    # ---------------- AWS ----------------
+
     EC2_COUNT = "ec2_count"
     EC2_LIST = "ec2_list"
 
@@ -22,70 +36,191 @@ class Intent(str, Enum):
 
     SUMMARY = "summary"
 
+    RECOMMENDATION = "recommendation"
+
     UNKNOWN = "unknown"
 
 
 def detect_intent(question: str) -> Intent:
-    """
-    Detect the user's intent from their question.
-    """
 
-    question = question.lower()
+    q = question.lower().strip()
 
-    # ---------------- EC2 ----------------
+    # ====================================================
+    # Greetings
+    # ====================================================
 
-    if "ec2" in question or "instance" in question:
-        if any(word in question for word in ["how many", "count", "number"]):
+    if q in [
+        "hi",
+        "hello",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening",
+    ]:
+        return Intent.GREETING
+
+    # ====================================================
+    # Thanks
+    # ====================================================
+
+    if any(word in q for word in [
+        "thanks",
+        "thank you",
+        "thankyou",
+    ]):
+        return Intent.THANKS
+
+    # ====================================================
+    # Goodbye
+    # ====================================================
+
+    if any(word in q for word in [
+        "bye",
+        "goodbye",
+        "see you",
+    ]):
+        return Intent.GOODBYE
+
+    # ====================================================
+    # Help
+    # ====================================================
+
+    if any(word in q for word in [
+        "help",
+        "what can you do",
+        "who are you",
+    ]):
+        return Intent.HELP
+
+    # ====================================================
+    # Cloud Knowledge
+    # ====================================================
+
+    knowledge_words = [
+        "what is",
+        "how to",
+        "how do i",
+        "difference",
+        "explain",
+        "best practices",
+    ]
+
+    if any(word in q for word in knowledge_words):
+        return Intent.KNOWLEDGE
+
+    # ====================================================
+    # Recommendations
+    # ====================================================
+
+    if any(word in q for word in [
+        "recommend",
+        "optimization",
+        "improve",
+        "improvements",
+        "security",
+        "cost",
+    ]):
+        return Intent.RECOMMENDATION
+
+    # ====================================================
+    # Infrastructure Summary
+    # ====================================================
+
+    if any(word in q for word in [
+        "summary",
+        "overview",
+        "infrastructure",
+    ]):
+        return Intent.SUMMARY
+
+    # ====================================================
+    # EC2
+    # ====================================================
+
+    if "ec2" in q or "instance" in q:
+
+        if any(word in q for word in [
+            "count",
+            "how many",
+            "number",
+        ]):
             return Intent.EC2_COUNT
+
         return Intent.EC2_LIST
 
-    # ---------------- S3 ----------------
+    # ====================================================
+    # S3
+    # ====================================================
 
-    if "s3" in question or "bucket" in question:
-        if any(word in question for word in ["how many", "count", "number"]):
+    if "s3" in q or "bucket" in q:
+
+        if any(word in q for word in [
+            "count",
+            "how many",
+            "number",
+        ]):
             return Intent.S3_COUNT
+
         return Intent.S3_LIST
 
-    # ---------------- RDS ----------------
+    # ====================================================
+    # Lambda
+    # ====================================================
 
-    if "rds" in question or "database" in question:
-        if any(word in question for word in ["how many", "count", "number"]):
-            return Intent.RDS_COUNT
-        return Intent.RDS_LIST
+    if "lambda" in q:
 
-    # ---------------- Lambda ----------------
-
-    if "lambda" in question:
-        if any(word in question for word in ["how many", "count", "number"]):
+        if any(word in q for word in [
+            "count",
+            "how many",
+            "number",
+        ]):
             return Intent.LAMBDA_COUNT
+
         return Intent.LAMBDA_LIST
 
-    # ---------------- VPC ----------------
+    # ====================================================
+    # RDS
+    # ====================================================
 
-    if "vpc" in question:
-        if any(word in question for word in ["how many", "count", "number"]):
+    if "rds" in q or "database" in q:
+
+        if any(word in q for word in [
+            "count",
+            "how many",
+            "number",
+        ]):
+            return Intent.RDS_COUNT
+
+        return Intent.RDS_LIST
+
+    # ====================================================
+    # VPC
+    # ====================================================
+
+    if "vpc" in q:
+
+        if any(word in q for word in [
+            "count",
+            "how many",
+            "number",
+        ]):
             return Intent.VPC_COUNT
+
         return Intent.VPC_LIST
 
-    # ---------------- EBS ----------------
+    # ====================================================
+    # EBS
+    # ====================================================
 
-    if "ebs" in question or "volume" in question:
-        if any(word in question for word in ["how many", "count", "number"]):
+    if "ebs" in q or "volume" in q:
+
+        if any(word in q for word in [
+            "count",
+            "how many",
+            "number",
+        ]):
             return Intent.EBS_COUNT
+
         return Intent.EBS_LIST
-
-    # ---------------- Summary ----------------
-
-    if any(
-        word in question
-        for word in [
-            "summary",
-            "overview",
-            "infrastructure",
-            "resources",
-            "cloud summary",
-        ]
-    ):
-        return Intent.SUMMARY
 
     return Intent.UNKNOWN
